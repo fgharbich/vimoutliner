@@ -8,22 +8,22 @@ OS=`uname`
 
 #BACKUP FILE NAMES
 bext=`date +_%T_%F.old`
-if [ $OS == Linux ] ; then 
+if [ $OS = Linux ] ; then 
        backupargs="-bS $bext"
-elif [ $OS == FreeBSD ] ; then
+elif [ $OS = FreeBSD ] ; then
        backupargs="-bB $bext"
 else backupargs="";
 fi
 
 
 #SOME FUNCTIONS
-function sure? {
-	read -p" (y/N)? " 
+sure () {
+	read -p " (y/N)? " REPLY
 	echo
 	test $REPLY = "y" || test $REPLY = "Y"
 }
 
-function make_dir {
+make_dir () {
 	  test -d $1 || {
 		  echo "    creating: $1"
 		  mkdir $1
@@ -31,16 +31,16 @@ function make_dir {
   	}
 }
 
-function copyfile {
+copyfile () {
 	echo "    installing: $2/$1"
 	install $backupargs $1 $2/$1
 }
 
-function copydir {
+copydir () {
 	files=`ls $1`
 	for i in $files; do 
 		echo "    installing: $2/$i"
-		if [[ -d $1/$i ]]; then
+		if [ -d $1/$i ]; then
 			mkdir -p $2/$i
 			copydir $1/$i $2/$i
 		else
@@ -59,7 +59,7 @@ Vim Outliner Installation
 
 EOT
 echo -n "Would you like to continue "
-sure? || exit
+sure || exit
 
 
 #CREATE NECESSARY DIRECTORIES
@@ -138,14 +138,14 @@ Add-ons
 EOT
 
 echo -n "Would you like to install these "
-if sure?; then
+if sure; then
 	echo installing add-ons
 	copydir vimoutliner/plugin $vodir/plugin
 	copydir vimoutliner/scripts $vodir/scripts
 fi
 
 #ALL DONE
-echo installation complete
+echo Installation complete
 
 cat <<EOT
 
